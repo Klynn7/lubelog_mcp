@@ -1,9 +1,12 @@
+using LubeLogMCP.Helper;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<LubeLoggerApiClient>();
 
 builder.Services.AddMcpServer()
     .WithHttpTransport() // With streamable HTTP
