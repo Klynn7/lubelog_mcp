@@ -181,7 +181,19 @@ namespace LubeLogMCP.Helper
             => SendAsync(HttpMethod.Get, path, null, cancellationToken);
 
         public Task<ApiResult> SendJsonAsync(HttpMethod method, string path, JsonNode body, CancellationToken cancellationToken = default)
-            => SendAsync(method, path, new StringContent(body.ToJsonString(), Encoding.UTF8, "application/json"), cancellationToken);
+            => SendAsync(method, path, JsonContent(body.ToJsonString()), cancellationToken);
+
+        /// <summary>
+        /// JSON request body with a bare "application/json" content type. StringContent's default adds
+        /// "; charset=utf-8", which makes LubeLogger 1.7.5's /api/vehicle/odometerrecords/add fail (nginx reports 502,
+        /// and the record is sometimes created anyway). The body is still UTF-8.
+        /// </summary>
+        public static StringContent JsonContent(string json)
+        {
+            var content = new StringContent(json, Encoding.UTF8);
+            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            return content;
+        }
 
         /// <summary>
         /// Some LubeLogger validation failures come back as HTTP 200 with {"success":false,...}

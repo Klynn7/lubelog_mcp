@@ -360,7 +360,7 @@ namespace LubeLogMCP.MCP
             var response = await _api.SendAsync(
                 HttpMethod.Post,
                 $"/api/vehicle/{recordPath}/add?vehicleId={vehicleId}",
-                new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8, "application/json"));
+                LubeLoggerApiClient.JsonContent(JsonSerializer.Serialize(requestData)));
             return response.ToToolResult();
         }
     }
