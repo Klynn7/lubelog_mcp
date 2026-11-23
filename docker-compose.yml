@@ -3,11 +3,14 @@
 services:
   app:
     image: ghcr.io/klynn7/lubelogger_mcp:edge
-    # environment:
-    #  - LUBELOG_INSTANCE=
-    #  - LUBELOG_USER=
-    #  - LUBELOG_PASS=
-    #  - LUBELOG_ENABLE_DELETE=false
+    environment:
+      # Required: base URL of your LubeLogger instance
+      - LUBELOG_INSTANCE=https://lubelogger.example.com
+      # Optional: Local Auth fallback, used only when the client sends no API key or Authorization header
+      # - LUBELOG_USER=
+      # - LUBELOG_PASS=
+      # Optional: set to true to expose the delete tools (also needs a Manager API key)
+      # - LUBELOG_ENABLE_DELETE=false
     restart: unless-stopped
     # expose port and/or use serving via traefik
     ports:
