@@ -15,7 +15,7 @@ namespace LubeLogMCP.MCP
         {
             _api = api;
         }
-        [McpServerTool, Description("Gets status of LubeLogger MCP.")]
+        [McpServerTool(ReadOnly = true, OpenWorld = false, Title = "Get LubeLogger MCP status"), Description("Gets status of LubeLogger MCP.")]
         public async Task<string> GetLubeLoggerMCPStatus()
         {
             string result = $"MCP Version: {StaticHelper.VersionNumber}";
@@ -53,7 +53,7 @@ namespace LubeLogMCP.MCP
             }
             return result;
         }
-        [McpServerTool, Description("Gets vehicles in garage.")]
+        [McpServerTool(ReadOnly = true, OpenWorld = false, Title = "Get vehicles"), Description("Gets vehicles in garage.")]
         public async Task<string> GetVehicles()
         {
             var response = await _api.GetAsync("/api/vehicles");
@@ -77,7 +77,7 @@ namespace LubeLogMCP.MCP
                 return $"Error: unexpected response from LubeLogger: {ex.Message}";
             }
         }
-        [McpServerTool, Description("Check if a vehicle is an electric vehicle")]
+        [McpServerTool(ReadOnly = true, OpenWorld = false, Title = "Check if vehicle is electric"), Description("Check if a vehicle is an electric vehicle")]
         public async Task<string> GetVehicleIsElectric([Description("id of the vehicle")] int vehicleId)
         {
             var response = await _api.GetAsync("/api/vehicles");
@@ -102,7 +102,7 @@ namespace LubeLogMCP.MCP
                 return $"Error: unexpected response from LubeLogger: {ex.Message}";
             }
         }
-        [McpServerTool, Description("Adds a fuel record.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add fuel record"), Description("Adds a fuel record.")]
         public async Task<string> AddFuelRecord(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Date of fuel up")] DateTime date,
@@ -130,7 +130,7 @@ namespace LubeLogMCP.MCP
             };
             return await PostRecordAsync("gasrecords", vehicleId, requestData, extraFields, notes, tags);
         }
-        [McpServerTool, Description("Adds a service record.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add service record"), Description("Adds a service record.")]
         public async Task<string> AddServiceRecord(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Date serviced")] DateTime date,
@@ -150,7 +150,7 @@ namespace LubeLogMCP.MCP
             };
             return await PostRecordAsync("servicerecords", vehicleId, requestData, extraFields, notes, tags);
         }
-        [McpServerTool, Description("Adds a repair record.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add repair record"), Description("Adds a repair record.")]
         public async Task<string> AddRepairRecord(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Date repaired")] DateTime date,
@@ -170,7 +170,7 @@ namespace LubeLogMCP.MCP
             };
             return await PostRecordAsync("repairrecords", vehicleId, requestData, extraFields, notes, tags);
         }
-        [McpServerTool, Description("Adds an upgrade record.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add upgrade record"), Description("Adds an upgrade record.")]
         public async Task<string> AddUpgradeRecord(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Date upgraded")] DateTime date,
@@ -190,7 +190,7 @@ namespace LubeLogMCP.MCP
             };
             return await PostRecordAsync("upgraderecords", vehicleId, requestData, extraFields, notes, tags);
         }
-        [McpServerTool, Description("Adds an odometer record.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add odometer record"), Description("Adds an odometer record.")]
         public async Task<string> AddOdometerRecord(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Date recorded")] DateTime date,
@@ -212,7 +212,7 @@ namespace LubeLogMCP.MCP
             }
             return await PostRecordAsync("odometerrecords", vehicleId, requestData, extraFields, notes, tags);
         }
-        [McpServerTool, Description("Get Equipped Equipment for a vehicle")]
+        [McpServerTool(ReadOnly = true, OpenWorld = false, Title = "Get equipped equipment"), Description("Get Equipped Equipment for a vehicle")]
         public async Task<string> GetEquippedEquipment(
             [Description("id of the vehicle")] int vehicleId
             )
@@ -234,7 +234,7 @@ namespace LubeLogMCP.MCP
                 return $"Error: unexpected response from LubeLogger: {ex.Message}";
             }
         }
-        [McpServerTool, Description("Adds a supply record.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add supply record"), Description("Adds a supply record.")]
         public async Task<string> AddSupplyRecord(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Date purchased")] DateTime date,
@@ -258,7 +258,7 @@ namespace LubeLogMCP.MCP
             };
             return await PostRecordAsync("supplyrecords", vehicleId, requestData, extraFields, notes, tags);
         }
-        [McpServerTool, Description("Adds a shop supply record.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add shop supply record"), Description("Adds a shop supply record.")]
         public async Task<string> AddShopSupplyRecord(
             [Description("Date purchased")] DateTime date,
             [Description("Description of the supply")] string description,
@@ -281,7 +281,7 @@ namespace LubeLogMCP.MCP
             };
             return await PostRecordAsync("supplyrecords", 0, requestData, extraFields, notes, tags);
         }
-        [McpServerTool, Description("Adds a vehicle record.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add vehicle record"), Description("Adds a vehicle record.")]
         public async Task<string> AddVehicleRecord(
             [Description("Model year of the vehicle")] int year,
             [Description("Make of the vehicle")] string make,
@@ -313,7 +313,7 @@ namespace LubeLogMCP.MCP
             var response = await _api.SendAsync(HttpMethod.Post, "/api/vehicles/add", new FormUrlEncodedContent(dataParams));
             return response.ToToolResult();
         }
-        [McpServerTool, Description("Gets latest odometer reading for a vehicle.")]
+        [McpServerTool(ReadOnly = true, OpenWorld = false, Title = "Get latest odometer"), Description("Gets latest odometer reading for a vehicle.")]
         public async Task<string> GetLatestOdometer(
             [Description("id of the vehicle")] int vehicleId
             )
@@ -321,7 +321,7 @@ namespace LubeLogMCP.MCP
             var response = await _api.GetAsync($"/api/vehicle/odometerrecords/latest?vehicleId={vehicleId}");
             return response.ToToolResult();
         }
-        [McpServerTool, Description("Get Extra Fields for a Record Type")]
+        [McpServerTool(ReadOnly = true, OpenWorld = false, Title = "Get extra fields"), Description("Get Extra Fields for a Record Type")]
         public async Task<string> GetExtraFields(
             [Description("Record type")] ImportMode importMode
             )

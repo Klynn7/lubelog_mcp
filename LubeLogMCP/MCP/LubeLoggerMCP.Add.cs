@@ -12,7 +12,7 @@ namespace LubeLogMCP.MCP
     /// </summary>
     public partial class LubeLoggerMCP
     {
-        [McpServerTool, Description("Adds a tax record (registration, inspection fee, toll pass, etc.).")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add tax record"), Description("Adds a tax record (registration, inspection fee, toll pass, etc.).")]
         public async Task<string> AddTaxRecord(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Date paid")] DateTime date,
@@ -34,7 +34,7 @@ namespace LubeLogMCP.MCP
             return await AddJsonRecordAsync("taxrecords", vehicleId, body);
         }
 
-        [McpServerTool, Description("Adds a note to a vehicle.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add note"), Description("Adds a note to a vehicle.")]
         public async Task<string> AddNote(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Short title of the note")] string description,
@@ -54,7 +54,7 @@ namespace LubeLogMCP.MCP
             return await AddJsonRecordAsync("notes", vehicleId, body);
         }
 
-        [McpServerTool, Description("Adds a planner record: planned service, repair or upgrade work. Progress cannot be set to Done through the API.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add plan record"), Description("Adds a planner record: planned service, repair or upgrade work. Progress cannot be set to Done through the API.")]
         public async Task<string> AddPlanRecord(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Description of the planned work")] string description,
@@ -78,7 +78,7 @@ namespace LubeLogMCP.MCP
             return await AddJsonRecordAsync("planrecords", vehicleId, body);
         }
 
-        [McpServerTool, Description("Adds a one-off reminder. Metric Date needs dueDate, Odometer needs dueOdometer, Both needs both. Recurring reminders can't be created through the LubeLogger API; set those up in the LubeLogger UI.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add reminder"), Description("Adds a one-off reminder. Metric Date needs dueDate, Odometer needs dueOdometer, Both needs both. Recurring reminders can't be created through the LubeLogger API; set those up in the LubeLogger UI.")]
         public async Task<string> AddReminder(
             [Description("id of the vehicle")] int vehicleId,
             [Description("What the reminder is for")] string description,
@@ -100,7 +100,7 @@ namespace LubeLogMCP.MCP
             return await AddJsonRecordAsync("reminders", vehicleId, body);
         }
 
-        [McpServerTool, Description("Adds an equipment record (e.g. a set of tires or a trailer) to a vehicle.")]
+        [McpServerTool(Destructive = false, Idempotent = false, OpenWorld = false, Title = "Add equipment record"), Description("Adds an equipment record (e.g. a set of tires or a trailer) to a vehicle.")]
         public async Task<string> AddEquipmentRecord(
             [Description("id of the vehicle")] int vehicleId,
             [Description("Description of the equipment")] string description,
