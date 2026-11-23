@@ -77,6 +77,36 @@ jobs:
             org.opencontainers.image.base.name=${{ env.RUNTIME_IMAGE }}
             org.opencontainers.image.base.digest=${{ needs.base-image.outputs.digest }}
 
+      # Start the image and check it serves requests before anything is pushed. Builds that only compile
+      # can't catch start-up failures (e.g. a wrong entrypoint).
+      - name: Build smoke-test image (linux/amd64)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: lubelogger-mcp:smoke
+          build-args: |
+            RUNTIME_IMAGE=${{ env.RUNTIME_IMAGE }}@${{ needs.base-image.outputs.digest }}
+
+      - name: Smoke test
+        run: |
+          docker run -d --name smoke -p 8080:8080 lubelogger-mcp:smoke
+          ok=""
+          for i in $(seq 1 30); do
+            if health=$(curl -fsS http://localhost:8080/); then ok=1; break; fi
+            sleep 1
+          done
+          echo "health: ${health:-<none>}"
+          tools=$(curl -fsS -X POST http://localhost:8080/api/mcp \
+            -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' || true)
+          docker logs smoke
+          docker rm -f smoke >/dev/null
+          [ -n "$ok" ] || { echo "::error::container did not answer on :8080"; exit 1; }
+          echo "$tools" | grep -q '"get_vehicles"' || { echo "::error::tools/list did not return the MCP tools"; exit 1; }
+          echo "smoke test passed"
+
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
