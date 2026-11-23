@@ -72,6 +72,11 @@ namespace LubeLogMCP.Helper
                 // not JSON (e.g. an HTML error page); fall through
             }
             body = body.Trim();
+            if (body.StartsWith('<'))
+            {
+                // HTML error or login page (LubeLogger, or a proxy in front of it): not useful to the caller.
+                return string.Empty;
+            }
             return body.Length > 500 ? body[..500] + "..." : body;
         }
     }
