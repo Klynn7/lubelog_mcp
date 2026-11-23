@@ -2,6 +2,6 @@
 {
     public static class StaticHelper
     {
-        public const string VersionNumber = "0.1.3";
+        public const string VersionNumber = "0.2.0-fork";
     }
 }

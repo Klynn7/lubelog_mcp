@@ -19,27 +19,15 @@ if (string.Equals(builder.Configuration["LUBELOG_ENABLE_DELETE"], "true", String
     mcpBuilder.WithTools<LubeLoggerDeleteMCP>();
 }
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// No HTTPS redirection, HSTS or CORS: this is a server-to-server endpoint and TLS terminates at the reverse proxy.
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -51,6 +39,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapMcp("/api/mcp");
-app.UseCors();
 
 app.Run();
