@@ -41,8 +41,8 @@ namespace LubeLogMCP.Helper
             }
             string hint = StatusCode switch
             {
-                401 => " The API key is missing or invalid, or lacks the permission this operation needs (writes need Edit permission, deletes need Delete permission).",
-                403 => " The API key does not have the required permission for this vehicle or operation.",
+                401 => " The API key or credentials are missing or invalid.",
+                403 => " The API key lacks the permission this operation needs (writes need an Editor or Manager key, deletes a Manager key), or the user has no access to this vehicle.",
                 _ => string.Empty
             };
             return string.IsNullOrWhiteSpace(detail)

@@ -6,8 +6,8 @@ namespace LubeLogMCP.MCP
 {
     /// <summary>
     /// Delete tools. Deliberately NOT marked [McpServerToolType], so WithToolsFromAssembly() skips them;
-    /// Program.cs registers this class only when LUBELOG_ENABLE_DELETE=true. LubeLogger also requires a key
-    /// with Delete permission.
+    /// Program.cs registers this class only when LUBELOG_ENABLE_DELETE=true. LubeLogger also requires a Manager key
+    /// (Delete permission).
     /// </summary>
     public class LubeLoggerDeleteMCP
     {

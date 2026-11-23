@@ -30,7 +30,7 @@ the `/api/mcp` path and port 8080 are unchanged, so it is a drop-in replacement 
 |---|---|
 | `LUBELOG_INSTANCE` | Base URL of the LubeLogger instance (required). |
 | `LUBELOG_USER` / `LUBELOG_PASS` | Local Auth fallback, used only when the client sends no `Authorization`/`x-api-key` header or `apiKey` query parameter. |
-| `LUBELOG_ENABLE_DELETE` | Set to `true` to register the delete tools. Off by default; without it they don't appear in `tools/list`. LubeLogger still requires a key with Delete permission. |
+| `LUBELOG_ENABLE_DELETE` | Set to `true` to register the delete tools. Off by default; without it they don't appear in `tools/list`. LubeLogger still requires a Manager API key (Delete permission) for these. |
 
 ## Tools
 
