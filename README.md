@@ -12,24 +12,29 @@ AI and MCP are still evolving technologies, implementations of this project is s
 
 ## Getting Started
 
-This MCP Server allows for authentication to be configured at the AI-Agent level(Header Auth) or at the MCP Server level(Local Auth).
+The MCP server holds no LubeLogger credentials of its own. Each MCP client must send a LubeLogger API key, which
+the server passes through to LubeLogger:
 
-Header Auth is more complex to set up but offers greater security, whereas Local Auth is easier to set up but allows users unfettered access to all vehicles in the instance.
+- `x-api-key: <key>` header (recommended), or
+- an `Authorization` header (e.g. Basic auth for a LubeLogger user), or
+- an `apiKey=<key>` query parameter on the MCP URL (avoid if a proxy logs URLs).
 
-For details on both configurations, see [Wiki](https://github.com/hargata/lubelog_mcp/wiki)
+LubeLogger enforces the key's role: Viewer keys can only read, Editor keys can add and update, and Manager keys can
+also delete.
 
 ## Fork notes
 
 This fork extends upstream to cover LubeLogger's whole REST API (written against LubeLogger 1.7.5): reads,
 updates and (optionally) deletes for every record type, alongside upstream's add tools. Transport, auth,
-the `/api/mcp` path and port 8080 are unchanged, so it is a drop-in replacement for the upstream image.
+the `/api/mcp` path and port 8080 are unchanged. Unlike upstream, the server-side `LUBELOG_USER`/`LUBELOG_PASS`
+fallback ("Local Auth") has been removed: it let any caller who reached the endpoint without a key act as the stored
+user. Clients must always send their own key.
 
 ### Configuration
 
 | Variable | Purpose |
 |---|---|
 | `LUBELOG_INSTANCE` | Base URL of the LubeLogger instance (required). |
-| `LUBELOG_USER` / `LUBELOG_PASS` | Local Auth fallback, used only when the client sends no `Authorization`/`x-api-key` header or `apiKey` query parameter. |
 | `LUBELOG_ENABLE_DELETE` | Set to `true` to register the delete tools. Off by default; without it they don't appear in `tools/list`. LubeLogger still requires a Manager API key (Delete permission) for these. |
 
 ## Tools
