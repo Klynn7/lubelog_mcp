@@ -1,4 +1,5 @@
 using LubeLogMCP.Helper;
+using LubeLogMCP.MCP;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +9,15 @@ builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<LubeLoggerApiClient>();
 
-builder.Services.AddMcpServer()
+var mcpBuilder = builder.Services.AddMcpServer()
     .WithHttpTransport() // With streamable HTTP
     .WithToolsFromAssembly(); // Add all classes marked with [McpServerToolType]
+
+// Delete tools are opt-in: without the flag they don't appear in tools/list at all.
+if (string.Equals(builder.Configuration["LUBELOG_ENABLE_DELETE"], "true", StringComparison.OrdinalIgnoreCase))
+{
+    mcpBuilder.WithTools<LubeLoggerDeleteMCP>();
+}
 
 builder.Services.AddCors(options =>
 {
