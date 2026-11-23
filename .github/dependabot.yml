@@ -1,5 +1,5 @@
 # Opens PRs for dependency updates; the Build (and Docker, where relevant) checks run on each.
-# Base images are not listed: the Dockerfile uses floating tags and docker.yml rebuilds weekly to pick up patches.
+# The runtime base image is not listed: docker.yml polls its tag and rebuilds when the digest changes.
 version: 2
 updates:
   - package-ecosystem: "nuget"

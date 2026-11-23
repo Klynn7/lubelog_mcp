@@ -6,19 +6,47 @@ on:
   release:
     types: ["published"]
   pull_request:
-    paths: ["Dockerfile", ".dockerignore", "LubeLogMCP/**", "LubeLogMCP.sln", ".github/workflows/docker.yml"]
+    paths: ["Dockerfile", ".dockerignore", "LubeLogMCP/**", "LubeLogMCP.sln", ".github/workflows/docker.yml", ".github/scripts/check-base-image.py"]
   workflow_dispatch:
-  # Weekly rebuild so base-image patches (chiseled aspnet runtime, .NET SDK) reach :edge without a code change.
-  # The Dockerfile uses floating tags and runners have no layer cache, so each run pulls the latest bases.
+  # Poll for a new runtime base image. Microsoft republishes the floating tag on .NET servicing releases, the
+  # monthly rebuild (typically the second Tuesday) and critical CVE fixes; MCR has no webhooks, so we poll and
+  # only rebuild when the tag's digest differs from the one the published :edge image was built from.
   schedule:
-    - cron: "17 6 * * 1"   # Mondays 06:17 UTC
+    - cron: "23 */6 * * *"   # every 6 hours
 
 permissions:
   contents: read
   packages: write
 
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  RUNTIME_IMAGE: mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled
+  IMAGE: ghcr.io/klynn7/lubelogger_mcp
+
 jobs:
+  base-image:
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.check.outputs.digest }}
+      changed: ${{ steps.check.outputs.changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Compare runtime base digest with the published image
+        id: check
+        env:
+          BASE_IMAGE: ${{ env.RUNTIME_IMAGE }}
+          PUBLISHED_IMAGE: ${{ env.IMAGE }}:edge
+        run: python3 .github/scripts/check-base-image.py
+
   docker:
+    needs: base-image
+    # Scheduled runs build only when the base image moved; every other trigger always builds.
+    if: github.event_name != 'schedule' || needs.base-image.outputs.changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,11 +68,14 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: |
-            ghcr.io/klynn7/lubelogger_mcp
+            ${{ env.IMAGE }}
           tags: |
             type=edge,branch=main
             type=ref,event=tag
             type=raw,value=latest,enable=${{ github.event_name == 'release' }}
+          labels: |
+            org.opencontainers.image.base.name=${{ env.RUNTIME_IMAGE }}
+            org.opencontainers.image.base.digest=${{ needs.base-image.outputs.digest }}
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -52,6 +83,9 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           pull: true
+          # Build from the exact digest the base-image job saw, so the label matches what's inside.
+          build-args: |
+            RUNTIME_IMAGE=${{ env.RUNTIME_IMAGE }}@${{ needs.base-image.outputs.digest }}
           # Pull requests only check that the image builds; nothing is pushed.
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
