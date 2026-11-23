@@ -2,11 +2,12 @@
 
 services:
   app:
-    image: ghcr.io/hargata/lubelogger_mcp:latest
+    image: ghcr.io/klynn7/lubelogger_mcp:edge
     # environment:
     #  - LUBELOG_INSTANCE=
     #  - LUBELOG_USER=
     #  - LUBELOG_PASS=
+    #  - LUBELOG_ENABLE_DELETE=false
     restart: unless-stopped
     # expose port and/or use serving via traefik
     ports:
