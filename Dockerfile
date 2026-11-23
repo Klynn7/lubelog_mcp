@@ -10,4 +10,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /App
 COPY --from=build-env /App/out .
 EXPOSE 8080
+# Run as the image's built-in non-root user (port 8080 needs no privileges).
+USER $APP_UID
 CMD ["./LubeLogMCP"]
