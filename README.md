@@ -53,7 +53,7 @@ LubeLogger's JSON with ISO dates):
 `update_reminder`, `update_equipment_record`, `update_vehicle`, plus `recalculate_odometer_records`.
 Updates take the record's `vehicleId` and `id`. Only the fields you pass change: the tool reads the current record
 and writes it back whole, so attachments, tags and extra fields you don't mention are kept. Extra fields are merged
-by name.
+by name; passing an extra field with an empty value removes it.
 
 **Delete** (only with `LUBELOG_ENABLE_DELETE=true`): `delete_service_record`, `delete_repair_record`,
 `delete_upgrade_record`, `delete_fuel_record`, `delete_odometer_record`, `delete_supply_record`, `delete_tax_record`,

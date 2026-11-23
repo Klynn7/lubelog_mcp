@@ -299,6 +299,7 @@ namespace LubeLogMCP.Helper
 
         /// <summary>
         /// Merges extra fields into a record by name: supplied names overwrite, others are kept.
+        /// A supplied field with an empty value removes that field from the record.
         /// </summary>
         public static void MergeExtraFields(JsonObject record, IEnumerable<ExtraField>? extraFields)
         {
@@ -311,7 +312,14 @@ namespace LubeLogMCP.Helper
             {
                 var match = existing.OfType<JsonObject>()
                     .FirstOrDefault(x => string.Equals(x["name"]?.GetValue<string>(), field.Name, StringComparison.OrdinalIgnoreCase));
-                if (match != null)
+                if (string.IsNullOrEmpty(field.Value))
+                {
+                    if (match != null)
+                    {
+                        existing.Remove(match);
+                    }
+                }
+                else if (match != null)
                 {
                     match["value"] = field.Value;
                 }

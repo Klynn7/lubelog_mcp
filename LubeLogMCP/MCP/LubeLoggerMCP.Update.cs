@@ -17,7 +17,7 @@ namespace LubeLogMCP.MCP
     {
         private const string UpdateVehicleIdDescription = "id of the vehicle the record belongs to";
         private const string UpdateRecordIdDescription = "id of the record to update";
-        private const string UpdateExtraFieldsDescription = "Optional extra fields to set; matched by name, other extra fields are kept";
+        private const string UpdateExtraFieldsDescription = "Optional extra fields to set; matched by name, other extra fields are kept. An empty value removes that field";
         private const string UpdateNotesDescription = "Optional: replaces the notes";
         private const string UpdateTagsDescription = "Optional: replaces all tags (space-separated); pass an empty string to clear them";
 
