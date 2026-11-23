@@ -6,8 +6,12 @@ on:
   release:
     types: ["published"]
   pull_request:
-    paths: ["Dockerfile", ".dockerignore", "LubeLogMCP/**", "LubeLogMCP.sln"]
+    paths: ["Dockerfile", ".dockerignore", "LubeLogMCP/**", "LubeLogMCP.sln", ".github/workflows/docker.yml"]
   workflow_dispatch:
+  # Weekly rebuild so base-image patches (chiseled aspnet runtime, .NET SDK) reach :edge without a code change.
+  # The Dockerfile uses floating tags and runners have no layer cache, so each run pulls the latest bases.
+  schedule:
+    - cron: "17 6 * * 1"   # Mondays 06:17 UTC
 
 permissions:
   contents: read
@@ -47,6 +51,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
+          pull: true
           # Pull requests only check that the image builds; nothing is pushed.
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
