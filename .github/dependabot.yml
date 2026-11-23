@@ -1,0 +1,19 @@
+# Opens PRs for dependency updates; the Build (and Docker, where relevant) checks run on each.
+# Base images are not listed: the Dockerfile uses floating tags and docker.yml rebuilds weekly to pick up patches.
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      nuget:
+        patterns: ["*"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]
