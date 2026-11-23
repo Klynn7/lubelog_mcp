@@ -17,4 +17,6 @@ COPY --from=build-env /App/out .
 EXPOSE 8080
 # The chiseled image already defaults to this non-root user; kept explicit.
 USER $APP_UID
-CMD ["./LubeLogMCP"]
+# The chiseled base sets ENTRYPOINT ["/usr/bin/dotnet"] (CMD ["--info"]), so a bare CMD would run
+# "dotnet ./LubeLogMCP" and fail. Set the entrypoint explicitly; this also clears the inherited CMD.
+ENTRYPOINT ["dotnet", "LubeLogMCP.dll"]
