@@ -72,6 +72,11 @@ namespace LubeLogMCP.Helper
                 // not JSON (e.g. an HTML error page); fall through
             }
             body = body.Trim();
+            if (body.StartsWith('<'))
+            {
+                // HTML error or login page (LubeLogger, or a proxy in front of it): not useful to the caller.
+                return string.Empty;
+            }
             return body.Length > 500 ? body[..500] + "..." : body;
         }
     }
@@ -82,16 +87,12 @@ namespace LubeLogMCP.Helper
     public class LubeLoggerApiClient
     {
         private readonly string _instance;
-        private readonly string _username;
-        private readonly string _password;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public LubeLoggerApiClient(IConfiguration config, IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             _instance = (config["LUBELOG_INSTANCE"] ?? string.Empty).TrimEnd('/');
-            _username = config["LUBELOG_USER"] ?? string.Empty;
-            _password = config["LUBELOG_PASS"] ?? string.Empty;
             _httpClientFactory = httpClientFactory;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -116,13 +117,13 @@ namespace LubeLogMCP.Helper
             {
                 return "using client-supplied API key (apiKey query parameter)";
             }
-            if (!string.IsNullOrWhiteSpace(_username) && !string.IsNullOrWhiteSpace(_password))
-            {
-                return "using LUBELOG_USER/LUBELOG_PASS configured on the MCP server";
-            }
-            return "Auth Not Configured: no client credentials and no LUBELOG_USER/LUBELOG_PASS";
+            return "Auth Not Configured: the client sent no API key or Authorization header";
         }
 
+        /// <summary>
+        /// Forwards the MCP client's own credentials to LubeLogger. There is deliberately no server-side fallback
+        /// (LUBELOG_USER/LUBELOG_PASS was removed): without one, an unauthenticated caller can't act as a stored user.
+        /// </summary>
         public void AddAuthHeaders(HttpRequestMessage request)
         {
             //check if we have headers
@@ -137,12 +138,6 @@ namespace LubeLogMCP.Helper
             else if (_httpContextAccessor.HttpContext?.Request.Query.TryGetValue("apiKey", out var apiKey) ?? false)
             {
                 request.Headers.Add("x-api-key", apiKey.FirstOrDefault());
-            }
-            else if (!string.IsNullOrWhiteSpace(_username) && !string.IsNullOrWhiteSpace(_password))
-            {
-                var authenticationString = $"{_username}:{_password}";
-                var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.UTF8.GetBytes(authenticationString));
-                request.Headers.Add("Authorization", "Basic " + base64EncodedAuthenticationString);
             }
         }
 
