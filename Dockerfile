@@ -6,10 +6,11 @@ ARG TARGETARCH
 RUN dotnet restore -a $TARGETARCH
 RUN dotnet publish -a $TARGETARCH -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0
+# Chiseled: no shell or package manager, non-root by default. No ICU/tzdata, hence InvariantGlobalization in the csproj.
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled
 WORKDIR /App
 COPY --from=build-env /App/out .
 EXPOSE 8080
-# Run as the image's built-in non-root user (port 8080 needs no privileges).
+# The chiseled image already defaults to this non-root user; kept explicit.
 USER $APP_UID
 CMD ["./LubeLogMCP"]
