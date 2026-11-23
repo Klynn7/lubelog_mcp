@@ -64,6 +64,10 @@ by name; passing an extra field with an empty value removes it.
 `delete_upgrade_record`, `delete_fuel_record`, `delete_odometer_record`, `delete_supply_record`, `delete_tax_record`,
 `delete_note`, `delete_plan_record`, `delete_reminder`, `delete_equipment_record`.
 
+Every tool carries MCP annotations so clients can tell lookups from changes: read tools are marked read-only,
+add tools non-destructive, update and delete tools destructive but idempotent, and all of them closed-world (they
+only talk to your LubeLogger instance). Each also has a human-readable title.
+
 ### Known limitations (LubeLogger API)
 
 - **Reminders created through the API are one-off.** The API has no recurring-interval fields, so recurring

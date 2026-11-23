@@ -18,47 +18,47 @@ namespace LubeLogMCP.MCP
             _api = api;
         }
 
-        [McpServerTool(Destructive = true), Description("Deletes a service record." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete service record"), Description("Deletes a service record." + DeleteWarning)]
         public Task<string> DeleteServiceRecord([Description("id of the service record")] int id)
             => _api.DeleteRecordAsync("servicerecords", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes a repair record." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete repair record"), Description("Deletes a repair record." + DeleteWarning)]
         public Task<string> DeleteRepairRecord([Description("id of the repair record")] int id)
             => _api.DeleteRecordAsync("repairrecords", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes an upgrade record." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete upgrade record"), Description("Deletes an upgrade record." + DeleteWarning)]
         public Task<string> DeleteUpgradeRecord([Description("id of the upgrade record")] int id)
             => _api.DeleteRecordAsync("upgraderecords", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes a fuel (gas) record." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete fuel record"), Description("Deletes a fuel (gas) record." + DeleteWarning)]
         public Task<string> DeleteFuelRecord([Description("id of the fuel record")] int id)
             => _api.DeleteRecordAsync("gasrecords", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes an odometer record." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete odometer record"), Description("Deletes an odometer record." + DeleteWarning)]
         public Task<string> DeleteOdometerRecord([Description("id of the odometer record")] int id)
             => _api.DeleteRecordAsync("odometerrecords", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes a supply record (vehicle or shop supply)." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete supply record"), Description("Deletes a supply record (vehicle or shop supply)." + DeleteWarning)]
         public Task<string> DeleteSupplyRecord([Description("id of the supply record")] int id)
             => _api.DeleteRecordAsync("supplyrecords", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes a tax record." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete tax record"), Description("Deletes a tax record." + DeleteWarning)]
         public Task<string> DeleteTaxRecord([Description("id of the tax record")] int id)
             => _api.DeleteRecordAsync("taxrecords", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes a note." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete note"), Description("Deletes a note." + DeleteWarning)]
         public Task<string> DeleteNote([Description("id of the note")] int id)
             => _api.DeleteRecordAsync("notes", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes a planner record." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete plan record"), Description("Deletes a planner record." + DeleteWarning)]
         public Task<string> DeletePlanRecord([Description("id of the plan")] int id)
             => _api.DeleteRecordAsync("planrecords", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes a reminder." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete reminder"), Description("Deletes a reminder." + DeleteWarning)]
         public Task<string> DeleteReminder([Description("id of the reminder")] int id)
             => _api.DeleteRecordAsync("reminders", id);
 
-        [McpServerTool(Destructive = true), Description("Deletes an equipment record." + DeleteWarning)]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Delete equipment record"), Description("Deletes an equipment record." + DeleteWarning)]
         public Task<string> DeleteEquipmentRecord([Description("id of the equipment record")] int id)
             => _api.DeleteRecordAsync("equipmentrecords", id);
     }

@@ -21,7 +21,7 @@ namespace LubeLogMCP.MCP
         private const string UpdateNotesDescription = "Optional: replaces the notes";
         private const string UpdateTagsDescription = "Optional: replaces all tags (space-separated); pass an empty string to clear them";
 
-        [McpServerTool, Description("Updates a service record. Only the fields you pass are changed.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update service record"), Description("Updates a service record. Only the fields you pass are changed.")]
         public Task<string> UpdateServiceRecord(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description(UpdateRecordIdDescription)] int id,
@@ -34,7 +34,7 @@ namespace LubeLogMCP.MCP
             [Description(UpdateExtraFieldsDescription)] List<ExtraField>? extraFields = null)
             => UpdateGenericRecordAsync("servicerecords", "service record", vehicleId, id, date, odometer, description, cost, notes, tags, extraFields);
 
-        [McpServerTool, Description("Updates a repair record. Only the fields you pass are changed.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update repair record"), Description("Updates a repair record. Only the fields you pass are changed.")]
         public Task<string> UpdateRepairRecord(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description(UpdateRecordIdDescription)] int id,
@@ -47,7 +47,7 @@ namespace LubeLogMCP.MCP
             [Description(UpdateExtraFieldsDescription)] List<ExtraField>? extraFields = null)
             => UpdateGenericRecordAsync("repairrecords", "repair record", vehicleId, id, date, odometer, description, cost, notes, tags, extraFields);
 
-        [McpServerTool, Description("Updates an upgrade record. Only the fields you pass are changed.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update upgrade record"), Description("Updates an upgrade record. Only the fields you pass are changed.")]
         public Task<string> UpdateUpgradeRecord(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description(UpdateRecordIdDescription)] int id,
@@ -60,7 +60,7 @@ namespace LubeLogMCP.MCP
             [Description(UpdateExtraFieldsDescription)] List<ExtraField>? extraFields = null)
             => UpdateGenericRecordAsync("upgraderecords", "upgrade record", vehicleId, id, date, odometer, description, cost, notes, tags, extraFields);
 
-        [McpServerTool, Description("Updates a fuel (gas) record. Only the fields you pass are changed. For electric vehicles, volume (energy added) must always be passed.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update fuel record"), Description("Updates a fuel (gas) record. Only the fields you pass are changed. For electric vehicles, volume (energy added) must always be passed.")]
         public async Task<string> UpdateFuelRecord(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description(UpdateRecordIdDescription)] int id,
@@ -106,7 +106,7 @@ namespace LubeLogMCP.MCP
             });
         }
 
-        [McpServerTool, Description("Updates an odometer record. Only the fields you pass are changed.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update odometer record"), Description("Updates an odometer record. Only the fields you pass are changed.")]
         public Task<string> UpdateOdometerRecord(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description(UpdateRecordIdDescription)] int id,
@@ -131,7 +131,7 @@ namespace LubeLogMCP.MCP
                 MergeExtraFields(record, extraFields);
             });
 
-        [McpServerTool, Description("Updates a supply record. Use vehicleId 0 for shop supplies. Only the fields you pass are changed.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update supply record"), Description("Updates a supply record. Use vehicleId 0 for shop supplies. Only the fields you pass are changed.")]
         public Task<string> UpdateSupplyRecord(
             [Description("id of the vehicle the record belongs to, or 0 for shop supplies")] int vehicleId,
             [Description(UpdateRecordIdDescription)] int id,
@@ -157,7 +157,7 @@ namespace LubeLogMCP.MCP
                 MergeExtraFields(record, extraFields);
             });
 
-        [McpServerTool, Description("Updates a tax record. Only the fields you pass are changed.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update tax record"), Description("Updates a tax record. Only the fields you pass are changed.")]
         public Task<string> UpdateTaxRecord(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description(UpdateRecordIdDescription)] int id,
@@ -177,7 +177,7 @@ namespace LubeLogMCP.MCP
                 MergeExtraFields(record, extraFields);
             });
 
-        [McpServerTool, Description("Updates a note. Only the fields you pass are changed.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update note"), Description("Updates a note. Only the fields you pass are changed.")]
         public Task<string> UpdateNote(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description("id of the note to update")] int id,
@@ -195,7 +195,7 @@ namespace LubeLogMCP.MCP
                 MergeExtraFields(record, extraFields);
             });
 
-        [McpServerTool, Description("Updates a planner record. Only the fields you pass are changed. Plans marked Done can't be updated through the API, and progress can't be set to Done.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update plan record"), Description("Updates a planner record. Only the fields you pass are changed. Plans marked Done can't be updated through the API, and progress can't be set to Done.")]
         public Task<string> UpdatePlanRecord(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description("id of the plan to update")] int id,
@@ -217,7 +217,7 @@ namespace LubeLogMCP.MCP
                 MergeExtraFields(record, extraFields);
             });
 
-        [McpServerTool, Description("Updates a reminder. Only the fields you pass are changed; recurring settings configured in the UI are kept. Metric Date needs a due date, Odometer a due odometer, Both needs both.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update reminder"), Description("Updates a reminder. Only the fields you pass are changed; recurring settings configured in the UI are kept. Metric Date needs a due date, Odometer a due odometer, Both needs both.")]
         public Task<string> UpdateReminder(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description("id of the reminder to update")] int id,
@@ -237,7 +237,7 @@ namespace LubeLogMCP.MCP
                 SetIfProvided(record, "tags", tags);
             });
 
-        [McpServerTool, Description("Updates an equipment record. Only the fields you pass are changed.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update equipment record"), Description("Updates an equipment record. Only the fields you pass are changed.")]
         public Task<string> UpdateEquipmentRecord(
             [Description(UpdateVehicleIdDescription)] int vehicleId,
             [Description(UpdateRecordIdDescription)] int id,
@@ -255,7 +255,7 @@ namespace LubeLogMCP.MCP
                 MergeExtraFields(record, extraFields);
             });
 
-        [McpServerTool, Description("Updates a vehicle's details (year, make, model, license plate, tags, extra fields such as VIN or trim). Only the fields you pass are changed. Fuel type can't be changed through this tool.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Update vehicle"), Description("Updates a vehicle's details (year, make, model, license plate, tags, extra fields such as VIN or trim). Only the fields you pass are changed. Fuel type can't be changed through this tool.")]
         public async Task<string> UpdateVehicle(
             [Description("id of the vehicle to update")] int vehicleId,
             [Description("New model year")] int? year = null,
@@ -319,7 +319,7 @@ namespace LubeLogMCP.MCP
             return result.ToToolResult();
         }
 
-        [McpServerTool, Description("Recalculates the distance traveled on every odometer record of a vehicle (initial odometer from the previous record). Use after correcting odometer records.")]
+        [McpServerTool(Destructive = true, Idempotent = true, OpenWorld = false, Title = "Recalculate odometer records"), Description("Recalculates the distance traveled on every odometer record of a vehicle (initial odometer from the previous record). Use after correcting odometer records.")]
         public async Task<string> RecalculateOdometerRecords(
             [Description("id of the vehicle")] int vehicleId)
         {
