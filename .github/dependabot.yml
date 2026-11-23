@@ -1,0 +1,19 @@
+# Opens PRs for dependency updates; the Build (and Docker, where relevant) checks run on each.
+# The runtime base image is not listed: docker.yml polls its tag and rebuilds when the digest changes.
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      nuget:
+        patterns: ["*"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]
