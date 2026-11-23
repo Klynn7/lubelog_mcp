@@ -32,6 +32,13 @@ namespace LubeLogMCP.Models
         public int StartingSoc { get; set; }
         [JsonPropertyName("endingSoc")]
         public int EndingSoc { get; set; }
+        [JsonPropertyName("notes")]
+        public string Notes { get; set; } = string.Empty;
+        /// <summary>
+        /// Space-separated list of tags.
+        /// </summary>
+        [JsonPropertyName("tags")]
+        public string Tags { get; set; } = string.Empty;
     }
     public class ExtraFieldPostModel
     {

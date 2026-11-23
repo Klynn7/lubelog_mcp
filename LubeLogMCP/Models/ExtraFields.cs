@@ -24,7 +24,7 @@
     public class ExtraFieldVM
     {
         public string Name { get; set; } = string.Empty;
-        public string IsRequired { get; set; } = string.Empty;
+        public bool IsRequired { get; set; }
         public string FieldType { get; set; } = string.Empty;
     }
 }
